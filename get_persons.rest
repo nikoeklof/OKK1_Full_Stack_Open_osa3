@@ -1,0 +1,6 @@
+POST  http://localhost:3001/api/persons/["{
+    "id": null,
+    "name": "Niko Eklöf",
+    "number": "0445124705",  
+}
+"]
