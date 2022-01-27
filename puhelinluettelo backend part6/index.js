@@ -1,11 +1,9 @@
 const express = require('express')
 const { status } = require('express/lib/response')
 const app = express()
-const morgan = require('morgan')
+
 
 app.use(express.json())
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms -- :body'))
-morgan.token('body', (req, res) => JSON.stringify(req.query));
 let persons = [
   {
     "id": "1",
@@ -59,42 +57,41 @@ app.post('/api/persons', (req, res) => {
   const id = Math.floor(Math.random() * 9999)
   const newperson = req.query
   newperson.id = id
-  console.log(newperson)
 
   if (typeof (newperson.name) !== "string" || typeof (newperson.number) !== "string") {
+    res.status(401)
+    res.writeHead(401, 'Error, please set name and number')
     valid = false
-    res.status(401).send({error: 'Error, please set name and number'})
-    
-    
   }
   if (newperson.name === '') {
+    res.status(401)
+    res.send(res.writeHead(401, 'Error, please set a name'))
     valid = false
-    res.status(401).send({error: 'Error, please set a name'})
   }
   if (newperson.number === '') {
+    res.status(401)
+    res.writeHead(401, 'Error, please set a number')
     valid = false
-    res.status(401).send({error: 'Error, please set a number'})
   }
 
-  if (valid === true) {
+  if (valid) {
   for (let i = 0; i < persons.length; i++) {
     let check = persons[i].name.toUpperCase()
     let check2 = newperson.name.toUpperCase()
     if (check === check2) {
+      res.status(303)
+      res.writeHead(303, 'Error, name must be unique')
       valid = false
-      res.status(303).send({error: 'Error, name must be unique'})
-      
     }
   }
   
   persons.push(newperson)
+  console.log(req.query)
   res.send(persons)
 }
 
   else {
-    
     res.end()
-    return
   }
 })
 

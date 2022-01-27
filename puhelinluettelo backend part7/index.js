@@ -1,11 +1,12 @@
 const express = require('express')
-const { status } = require('express/lib/response')
 const app = express()
 const morgan = require('morgan')
 
 app.use(express.json())
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms -- :body'))
-morgan.token('body', (req, res) => JSON.stringify(req.query));
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms -- :query'))
+morgan.token('query', (req, res) => JSON.stringify(req.query));
+
 let persons = [
   {
     "id": "1",
@@ -59,7 +60,7 @@ app.post('/api/persons', (req, res) => {
   const id = Math.floor(Math.random() * 9999)
   const newperson = req.query
   newperson.id = id
-  console.log(newperson)
+  // console.log(newperson)
 
   if (typeof (newperson.name) !== "string" || typeof (newperson.number) !== "string") {
     valid = false

@@ -1,11 +1,8 @@
 const express = require('express')
-const { status } = require('express/lib/response')
 const app = express()
-const morgan = require('morgan')
+
 
 app.use(express.json())
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms -- :body'))
-morgan.token('body', (req, res) => JSON.stringify(req.query));
 let persons = [
   {
     "id": "1",
@@ -55,47 +52,35 @@ app.delete('/api/persons/:id', (req, res) => {
   res.send(persons)
 })
 app.post('/api/persons', (req, res) => {
-  let valid = true
+
   const id = Math.floor(Math.random() * 9999)
   const newperson = req.query
   newperson.id = id
-  console.log(newperson)
-
-  if (typeof (newperson.name) !== "string" || typeof (newperson.number) !== "string") {
-    valid = false
-    res.status(401).send({error: 'Error, please set name and number'})
-    
-    
+  console
+  if (typeof(newperson.name) !== "string" || typeof(newperson.number) !== "string") {
+    res.status(401)
+    res.end('Error, please set name and number')
+    if(newperson.name === ''){
+      res.status(401)
+      res.end('Error, please set a name')
+    }
+    if(newperson.number.length === ''){
+      res.status(401)
+      res.end('Error, please set a number')
+    }
   }
-  if (newperson.name === '') {
-    valid = false
-    res.status(401).send({error: 'Error, please set a name'})
-  }
-  if (newperson.number === '') {
-    valid = false
-    res.status(401).send({error: 'Error, please set a number'})
-  }
-
-  if (valid === true) {
   for (let i = 0; i < persons.length; i++) {
     let check = persons[i].name.toUpperCase()
     let check2 = newperson.name.toUpperCase()
     if (check === check2) {
-      valid = false
-      res.status(303).send({error: 'Error, name must be unique'})
-      
+      res.status(303)
+      res.end('Error, name must be unique')
     }
   }
-  
-  persons.push(newperson)
-  res.send(persons)
-}
 
-  else {
-    
-    res.end()
-    return
-  }
+  persons.push(newperson)
+  console.log(req.query)
+  res.send(persons)
 })
 
 
