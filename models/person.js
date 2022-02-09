@@ -1,17 +1,30 @@
 const mongoose = require('mongoose')
 const password = process.argv[2]
 
-const url =
-    `mongodb+srv://nigey:${password}@cluster0.3oayx.mongodb.net/persons?retryWrites=true&w=majority`
+const url = process.env.MONGODB_URL
 
-mongoose.connect(url)
+mongoose.connect(url).then(result => {
+    console.log('connected to MongoDB')
+  })
+  .catch((error) => {
+    console.log('error connecting to MongoDB:', error.message)
+  })
 
 const personSchema = new mongoose.Schema({
     name: String,
     number: String
 })
+personSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+      returnedObject.id = returnedObject._id.toString()
+      delete returnedObject._id
+      delete returnedObject.__v
+    }
+  })
 
 const Person = mongoose.model('people', personSchema)
+
+module.exports = Person
 
 const person = new Person({
     name: process.argv[3],

@@ -15,7 +15,8 @@ const Person = mongoose.model('people', personSchema)
 
 const person = new Person({
     name: process.argv[3],
-    number: process.argv[4]
+    number: process.argv[4],
+    id: Math.floor(Math.random() * 9999)
 })
 if (process.argv.length === 5) {
     person.save().then(result => {

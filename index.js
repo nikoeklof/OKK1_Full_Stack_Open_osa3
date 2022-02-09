@@ -1,7 +1,10 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./models/person')
+const { response } = require('express')
 app.use(express.static('build'))
 app.use(express.json())
 app.use(cors())
@@ -69,8 +72,6 @@ app.post('/api/persons', (req, res) => {
   if (typeof (newperson.name) !== "string" || typeof (newperson.number) !== "string") {
     valid = false
     res.status(401).send({ error: 'Error, please set name and number' })
-
-
   }
   if (newperson.name === '') {
     valid = false
@@ -91,9 +92,15 @@ app.post('/api/persons', (req, res) => {
 
       }
     }
-
-    persons.push(newperson)
-    res.send(persons)
+    const person = new Person({
+      name: newperson.name,
+      number: newperson.number,
+      id: id
+    })
+    person.save().then(savedPerson => {
+      response.json(savedPerson)
+    })
+    
   }
 
   else {
@@ -104,7 +111,7 @@ app.post('/api/persons', (req, res) => {
 })
 
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
