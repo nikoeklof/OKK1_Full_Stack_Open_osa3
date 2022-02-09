@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const password = process.argv[2]
 
-const url = process.env.MONGODB_URL
+const url = process.env.MONGODB_URI
 
 mongoose.connect(url).then(result => {
     console.log('connected to MongoDB')
@@ -30,12 +30,12 @@ const person = new Person({
     name: process.argv[3],
     number: process.argv[4]
 })
-if (process.argv.length === 5) {
+if (process.argv.length === 4) {
     person.save().then(result => {
         console.log(`person ${process.argv[3]} added to phonebook`)
         mongoose.connection.close()
     })
-} else if (process.argv.length === 3) {
+} else if (process.argv.length === 2) {
     Person.find({}).then(persons => {
         persons.forEach(person => {
             console.log(`name: ${person.name} number: ${person.number}`)
