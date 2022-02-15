@@ -6,48 +6,31 @@ const app = express()
 const morgan = require('morgan')
 const cors = require('cors')
 const Person = require('./models/person.js')
-const errorHandler = (error, request, response, next) => {
-  console.error(error.message)
-
-  if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id' })
-  }
-
-  next(error)
-}
+const { response } = require('express')
 
 app.use(express.static('build'))
 app.use(express.json())
 app.use(cors())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms -- :body'))
 morgan.token('body', (req, res) => JSON.stringify(req.body))
-app.use(errorHandler)
 
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>')
-
+  
 })
 
-app.get('/api/persons/:id', (req, res, next) => {
-  console.log(req.params.id)
+app.get('/api/persons/:id', (req, res) => {
   Person.findById(req.params.id).then(person => {
-    if (person) {
-      res.json(person)
-    } else {
-      res.status(404).end()
-    }
-
+    response.json(person)
   })
-  .catch(error => next(error))
 })
-
 
 app.get('/api/persons/', (req, res) => {
-  Person.find({}).then(response => {
-    res.json(response)
-  })
-
-
+ Person.find({}).then(response => {
+  res.json(response)
+ })
+  
+  
 })
 
 app.get('/api/info/', (req, res) => {
@@ -57,8 +40,8 @@ app.get('/api/info/', (req, res) => {
 })
 app.delete('/api/persons/:id', (req, res) => {
   const id = req.params.id
-  for (let i = 0; i < persons.length; i++) {
-    if (persons[i].id === id) {
+  for(let i = 0; i < persons.length; i++){
+    if(persons[i].id === id){
       persons.splice(i, 1)
     }
   }
@@ -66,7 +49,7 @@ app.delete('/api/persons/:id', (req, res) => {
   res.send(persons)
 })
 app.post('/api/persons', (req, res) => {
-
+  
   const body = req.body
   console.log(body.id)
 

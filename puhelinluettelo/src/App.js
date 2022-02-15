@@ -11,6 +11,7 @@ const App = () => {
   const hook = () => {
     axiosService.getAll().then(response => {
       setPersons(response.data)
+      console.log(response.data)
     })
   }
   useEffect(hook, [])
@@ -72,6 +73,7 @@ const Filter = (props) => {
 
 
 }
+
 const PersonForm = (props) => {
   return (
     <form onSubmit={(e) => {
@@ -103,8 +105,8 @@ const PersonForm = (props) => {
         }
       }
       if (!updated) {
-        props.form[2].setPersons(props.form[2].persons.concat({ name: name, number: number , id: NaN}))
-        axiosService.create({ name: name, number: number , id: NaN})
+        props.form[2].setPersons(props.form[2].persons.concat({ name: name, number: number , id: undefined}))
+        axiosService.create({ name: name, number: number , id: undefined})
           .then(() => {
             props.form[3].handleMessageChange(`${name} added`)
             axiosService.getAll().then(response => {
@@ -175,6 +177,7 @@ const Notification = (message) => {
   )
 
 }
+
 
 
 
