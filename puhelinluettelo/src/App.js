@@ -11,7 +11,6 @@ const App = () => {
   const hook = () => {
     axiosService.getAll().then(response => {
       setPersons(response.data)
-      console.log(response.data)
     })
   }
   useEffect(hook, [])
@@ -44,7 +43,7 @@ const App = () => {
     }
 
   }
-
+  console.log(persons)
   return (
     <div>
       <h2>Phonebook</h2>
@@ -92,7 +91,7 @@ const PersonForm = (props) => {
           if (props.form[2].persons[i].name.toUpperCase().includes(name.toUpperCase())) {
             if (window.confirm(`${name} is already on the list, do you want to update old number with a new one?`)) {
               updated = true
-              axiosService.update(i , { name: name, number: number , id: props.form[2].persons[i].id}).then(() => {
+              axiosService.update(props.form[2].persons[i].id , { name: name, number: number }).then(() => {
                 props.form[3].handleMessageChange(`${name} updated`)
                 axiosService.getAll().then(response => {
                   props.form[2].setPersons(response.data)

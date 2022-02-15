@@ -38,7 +38,7 @@ app.get('/api/persons/:id', (req, res, next) => {
     }
 
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 
@@ -55,16 +55,15 @@ app.get('/api/info/', (req, res) => {
   res.send(`<p>Phonebook has info for ${persons.length} people</p><br></br><p>${date}</p>`)
 
 })
-app.delete('/api/persons/:id', (req, res) => {
-  const id = req.params.id
-  for (let i = 0; i < persons.length; i++) {
-    if (persons[i].id === id) {
-      persons.splice(i, 1)
-    }
-  }
-  console.log(`deleted person with the id of: ${id}`)
-  res.send(persons)
+
+app.delete('/api/persons/:id', (req, res, next) => {
+  Person.findByIdAndRemove(req.params.id)
+    .then(result => {
+      res.status(204).end()
+    })
+    .catch(error => next(error))
 })
+
 app.post('/api/persons', (req, res) => {
 
   const body = req.body
@@ -84,6 +83,17 @@ app.post('/api/persons', (req, res) => {
   person.save().then(savedPerson => {
     res.json(savedPerson)
   })
+})
+
+app.put('/api/persons/:id', (req, res, next) => {
+  const body = req.body
+  const person = {
+    name : body.name,
+    number: body.number
+  }
+  Person.findByIdAndUpdate(req.params.id, person, {new : true}).then(updatedPerson => {
+    res.json(updatedPerson)
+  }).catch(error => next(error))
 })
 
 
