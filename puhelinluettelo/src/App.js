@@ -26,7 +26,7 @@ const App = () => {
   }
   const handleMessageChange = (msg) => {
     setMessage(msg)
-    setTimeout(() => { setMessage('') }, 3000)
+    setTimeout(() => { setMessage('') }, 4000)
   }
   const deletePerson = (id, name) => {
     if (window.confirm(`Are you sure you want to delete ${name}`)) {
@@ -43,7 +43,7 @@ const App = () => {
     }
 
   }
-  console.log(persons)
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -92,9 +92,8 @@ const PersonForm = (props) => {
             if (window.confirm(`${name} is already on the list, do you want to update old number with a new one?`)) {
               updated = true
               axiosService.update(props.form[2].persons[i].id , { name: name, number: number, id: props.form[2].persons[i].id }).then(() => {
-                props.form[3].handleMessageChange(`${name} updated!`)
                 axiosService.getAll().then(response => {
-                  console.log(response.data)
+                  props.form[3].handleMessageChange(`${name} updated!`)
                   props.form[2].setPersons(response.data)
                 }).catch(error => {
                   console.log(error.response.data)
@@ -111,8 +110,8 @@ const PersonForm = (props) => {
         props.form[2].setPersons(props.form[2].persons.concat({ name: name, number: number , id: undefined}))
         axiosService.create({ name: name, number: number , id: undefined})
           .then(() => {
-            props.form[3].handleMessageChange(`${name} added!`)
             axiosService.getAll().then(response => {
+              props.form[3].handleMessageChange(`${name} added!`)
               props.form[2].setPersons(response.data)
             })
           }).catch(error => {

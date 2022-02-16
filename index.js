@@ -7,7 +7,6 @@ const morgan = require('morgan')
 const cors = require('cors')
 const Person = require('./models/person.js')
 const errorHandler = (error, request, response, next) => {
-  console.error(error.message)
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
@@ -21,8 +20,8 @@ const errorHandler = (error, request, response, next) => {
 app.use(express.static('build'))
 app.use(express.json())
 app.use(cors())
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms -- :body'))
-morgan.token('body', (req, res) => JSON.stringify(req.body))
+// app.use(morgan(':method :url :status :res[content-length] - :response-time ms -- :body'))
+// morgan.token('body', (req, res) => JSON.stringify(req.body))
 app.use(errorHandler)
 
 app.get('/', (req, res) => {
@@ -66,10 +65,10 @@ app.delete('/api/persons/:id', (req, res, next) => {
     .catch(error => next(error))
 })
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
 
   const body = req.body
-  console.log(body.id)
+ 
 
   if (body.name === undefined || body.number === undefined) {
     return res.status(400).json({ error: 'name or number missing' })
@@ -80,14 +79,11 @@ app.post('/api/persons', (req, res) => {
     number: body.number,
 
   })
-  console.log(person)
+  
 
   person.save().then(savedPerson => {
     res.json(savedPerson)
-  }).catch(error => {
-    console.log(error.message)
-    res.json(error.message)
-  })
+  }).catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (req, res, next) => {
