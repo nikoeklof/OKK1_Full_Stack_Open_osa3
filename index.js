@@ -85,7 +85,7 @@ app.post('/api/persons', (req, res) => {
   person.save().then(savedPerson => {
     res.json(savedPerson)
   }).catch(error => {
-    res.json(error.res.data)
+    res.json(error.message)
   })
 })
 

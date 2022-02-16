@@ -94,6 +94,7 @@ const PersonForm = (props) => {
               axiosService.update(props.form[2].persons[i].id , { name: name, number: number, id: props.form[2].persons[i].id }).then(() => {
                 props.form[3].handleMessageChange(`${name} updated`)
                 axiosService.getAll().then(response => {
+                  console.log(response.data)
                   props.form[2].setPersons(response.data)
                 })
               }
@@ -109,6 +110,7 @@ const PersonForm = (props) => {
           .then(() => {
             props.form[3].handleMessageChange(`${name} added`)
             axiosService.getAll().then(response => {
+              console.log(response.data)
               props.form[2].setPersons(response.data)
             })
           })
