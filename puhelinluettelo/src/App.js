@@ -92,11 +92,12 @@ const PersonForm = (props) => {
             if (window.confirm(`${name} is already on the list, do you want to update old number with a new one?`)) {
               updated = true
               axiosService.update(props.form[2].persons[i].id , { name: name, number: number, id: props.form[2].persons[i].id }).then(() => {
-                props.form[3].handleMessageChange(`${name} updated`)
+                props.form[3].handleMessageChange(`${name} updated!`)
                 axiosService.getAll().then(response => {
                   console.log(response.data)
                   props.form[2].setPersons(response.data)
                 }).catch(error => {
+                  console.log(error.response.data)
                   props.form[3].handleMessageChange(`${error.response.data}`)
                 })
               }
@@ -110,11 +111,12 @@ const PersonForm = (props) => {
         props.form[2].setPersons(props.form[2].persons.concat({ name: name, number: number , id: undefined}))
         axiosService.create({ name: name, number: number , id: undefined})
           .then(() => {
-            props.form[3].handleMessageChange(`${name} added`)
+            props.form[3].handleMessageChange(`${name} added!`)
             axiosService.getAll().then(response => {
               props.form[2].setPersons(response.data)
             })
           }).catch(error => {
+            console.log(error.response.data)
             props.form[3].handleMessageChange(`${error.response.data}`)
           })
       }
