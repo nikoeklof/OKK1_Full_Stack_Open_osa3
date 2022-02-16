@@ -96,6 +96,8 @@ const PersonForm = (props) => {
                 axiosService.getAll().then(response => {
                   console.log(response.data)
                   props.form[2].setPersons(response.data)
+                }).catch(error => {
+                  props.form[3].handleMessageChange(`${error.response.data}`)
                 })
               }
               )
@@ -110,9 +112,10 @@ const PersonForm = (props) => {
           .then(() => {
             props.form[3].handleMessageChange(`${name} added`)
             axiosService.getAll().then(response => {
-              console.log(response.data)
               props.form[2].setPersons(response.data)
             })
+          }).catch(error => {
+            props.form[3].handleMessageChange(`${error.response.data}`)
           })
       }
 
