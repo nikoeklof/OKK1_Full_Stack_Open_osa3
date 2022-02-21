@@ -20,7 +20,7 @@ const personSchema = new mongoose.Schema({
         required: true,
         minlength: 8
     },
-    id: Number,
+    id: Number
 })
 personSchema.set('toJSON', {
     transform: (document, returnedObject) => {
